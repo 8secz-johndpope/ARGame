@@ -1,0 +1,11 @@
+/* 
+  Localizable.strings
+  ARGame
+
+  Created by Aleksandr on 20.12.2017.
+  Copyright © 2017 Aleksandr. All rights reserved.
+*/
+
+"permission_camera" = "Doesn't have permission to use Camera, please change privacy settings";
+"tab_item_map" = "Map";
+"tab_item_camera" = "Camera";
