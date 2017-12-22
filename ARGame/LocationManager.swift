@@ -12,8 +12,6 @@ import GoogleMaps
 class LocationManager: NSObject {
 
     var updateLocation: ((_ location: CLLocation) -> Void)?
-    var lastLocation: CLLocation?
-    
     fileprivate let locationManager = CLLocationManager()
     
     override init() {
@@ -29,7 +27,6 @@ extension LocationManager: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         
         if let location = locations.last {
-            lastLocation = location
             updateLocation?(location)
         }
     }

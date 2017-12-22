@@ -43,6 +43,8 @@ class DataPoints {
     
     func intersectLocation(_ location: CLLocation) -> Bool {
         
+        var intersect = false
+        
         if let points = getPoints() {
             
             for point in points {
@@ -51,12 +53,13 @@ class DataPoints {
                 let distance = location.distance(from: locationPoint)
                 
                 if distance <= point.radius {
-                    return true
+                    intersect = true
+                    break;
                 }
             }
         }
 
-        return false
+        return intersect
     }
 }
 

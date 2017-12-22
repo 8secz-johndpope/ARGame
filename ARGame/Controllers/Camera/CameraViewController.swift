@@ -9,14 +9,16 @@
 import UIKit
 import AVFoundation
 
-
 protocol CameraViewControllerPresentation: class {
     func open()
     func close()
+    
+    // включает фильтр пункта назначения
+    var fire: Bool { get set }
 }
 
 class CameraViewController: UIViewController, CameraViewControllerPresentation {
-
+    
     /* imageView_2 над imageView
      * imageView без фильтра
      * imageView_2 с фильтром, изменяется alpha по таймеру
@@ -26,7 +28,17 @@ class CameraViewController: UIViewController, CameraViewControllerPresentation {
     
     var captureSession: AVCaptureSession?
     var timer: Timer?
-
+    var fire: Bool = false {
+        didSet(fire) {
+            if fire == true {
+                self.stopTimer()
+                self.imageView_2.alpha = 1.0;
+            } else {
+                self.startTimer()
+            }
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Camera"
@@ -48,7 +60,10 @@ class CameraViewController: UIViewController, CameraViewControllerPresentation {
         }
 
         captureSession?.startRunning()
-        startTimer()
+        
+        if fire == false {
+            startTimer()
+        }
     }
     
     func stopCamera() {
@@ -150,7 +165,14 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
 
         let cameraImage = CIImage(cvPixelBuffer: pixelBuffer)
 
-        let filter = CIFilter(name: "CIEdges")!
+        var filter: CIFilter!
+        
+        if fire == true {
+            filter = CIFilter(name: "CIComicEffect")!
+        } else {
+            filter = CIFilter(name: "CIEdges")!
+        }
+        
         filter.setValue(cameraImage, forKey: kCIInputImageKey)
         
         DispatchQueue.main.async {

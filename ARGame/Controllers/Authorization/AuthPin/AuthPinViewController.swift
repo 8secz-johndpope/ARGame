@@ -12,11 +12,21 @@ class AuthPinViewController: UIViewController {
 
     var completion: ((_ success: Bool) -> Void)?
 
-    @IBOutlet weak var codeLabel: UILabel!
-    @IBOutlet weak var doneButton: UIButton!
+    @IBOutlet weak var codeLabel: UILabel! {
+        didSet {
+            codeLabel.text = "328556"
+            codeLabel.textAlignment = .center
+        }
+    }
+    @IBOutlet weak var doneButton: UIButton! {
+        didSet {
+            doneButton.setTitle("Done", for: .normal)
+            doneButton.addTarget(self, action: #selector(donePressed), for: .touchUpInside)
+        }
+    }
     
     deinit {
-        print(" ")
+       print("")
     }
     
     override func viewDidLoad() {
@@ -24,12 +34,6 @@ class AuthPinViewController: UIViewController {
         
         title = "sms code"
         view.backgroundColor = .yellow
-     
-        codeLabel.text = "328556"
-        codeLabel.textAlignment = .center
-        
-        doneButton.setTitle("Done", for: .normal)
-        doneButton.addTarget(self, action: #selector(donePressed), for: .touchUpInside)
     }
     
     // MARK: - Actions

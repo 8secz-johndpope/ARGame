@@ -32,7 +32,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window!.rootViewController = appCoordinator!.navController
         window!.makeKeyAndVisible()
 
-        //self.appCoordinator!.start()
+        //appCoordinator!.start()
     }
     
     func initializeFrameworks () {

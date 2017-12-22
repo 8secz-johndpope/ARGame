@@ -31,6 +31,12 @@ class AppCoordinator: Coordinator {
     
     fileprivate func configureAppContent() {
         
+        /*
+         *  navController - базовый навигационный контроллер.
+         *  Все что нужно запустить над TabBarController, например авторизацию, запускаем в navController.
+         *  В TabBarController, если нужна навигация внутри TabBarItem, TabBarItem запускается со своим навигационным контроллером
+         */
+        
         configureTabBarController()
         
         navController = UINavigationController.init(rootViewController: tabBarController)
@@ -43,8 +49,8 @@ class AppCoordinator: Coordinator {
         tabBarController.didSelect = { [unowned self] (vc) -> Void in
             
             /*
-             *  Сообщим контроллеру камеры об его активности
-             *  Контроллер включит/выключит камеру
+             *  Сообщим контроллеру камеры об его активности.
+             *  Контроллер включит/выключит камеру.
              */
             if vc is CameraViewControllerPresentation {
                 self.cameraVC?.open()
@@ -60,16 +66,13 @@ class AppCoordinator: Coordinator {
         locationManager?.updateLocation = { [unowned self] (location) -> Void in
             
             /*
-             *  Сообщим контроллеру камеры о пересечении с меткой
+             *  Сообщим контроллеру камеры о пересечении с меткой.
+             *  При пересечении с меткой изменяется изображение.
              */
-            if self.tabBarController.selectedViewController is CameraViewControllerPresentation {
-                
-                let intersect = DataPoints.shared.intersectLocation(location)
-                
-                if intersect == true {
-                    // TODO i:
-                    print(intersect)
-                }
+            let intersect = DataPoints.shared.intersectLocation(location)
+            
+            DispatchQueue.main.async {
+                self.cameraVC?.fire = intersect
             }
         }
     }
@@ -96,6 +99,9 @@ class AppCoordinator: Coordinator {
     
     fileprivate func openAuthorization(animated: Bool) {
         
+        /*
+         *  Запускает кейс авторизации
+         */
         let authCoordinator: AuthCoordinatorPresentation = AuthCoordinator.init(navigationController: navController)
         authCoordinator.start(animated: animated)
         

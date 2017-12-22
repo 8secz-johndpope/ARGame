@@ -19,9 +19,18 @@ class AuthPhoneViewController: UIViewController, AuthPhoneViewPresentation {
     @IBOutlet weak var stackView: UIStackView!
     @IBOutlet weak var topView: UIView!
     @IBOutlet weak var bottomView: UIView!
-    @IBOutlet weak var phoneField: UITextField!
-    @IBOutlet weak var doneButton: UIButton!
     @IBOutlet weak var bottomConstraint: NSLayoutConstraint!
+    @IBOutlet weak var phoneField: UITextField! {
+        didSet {
+            phoneField.keyboardType = .phonePad
+        }
+    }
+    @IBOutlet weak var doneButton: UIButton! {
+        didSet {
+            doneButton.setTitle("Done", for: .normal)
+            doneButton.addTarget(self, action: #selector(donePressed), for: .touchUpInside)
+        }
+    }
     
     deinit {
         print("")
@@ -37,8 +46,8 @@ class AuthPhoneViewController: UIViewController, AuthPhoneViewPresentation {
         addKeyboardObserver()
     }
     
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
         removeKeyboardObserver()
     }
 
@@ -46,12 +55,7 @@ class AuthPhoneViewController: UIViewController, AuthPhoneViewPresentation {
     func configureViews () {
         title = "Phone"
         view.backgroundColor = .white
-        
-        phoneField.keyboardType = .phonePad
 
-        doneButton.setTitle("Done", for: .normal)
-        doneButton.addTarget(self, action: #selector(donePressed), for: .touchUpInside)
- 
         let tap = UITapGestureRecognizer(target: self, action: #selector(viewTapped))
         view.addGestureRecognizer(tap)
     }
