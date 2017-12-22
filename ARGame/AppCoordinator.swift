@@ -16,26 +16,65 @@ protocol AppCoordinatorInterface: class {
     func logout()
 }
 
-class AppCoordinator: NSObject, Coordinator {
+class AppCoordinator: Coordinator {
     
     var navController: UINavigationController!
-    internal var childCoordinators: [AnyObject] = []
     
-    override init() {
-        super.init()
+    internal var childCoordinators: [AnyObject] = []
+    fileprivate var tabBarController: TabBarController!
+    fileprivate var locationManager: LocationManager?
+    
+    init() {
         configureAppContent()
+        configureLocationManager()
     }
     
     fileprivate func configureAppContent() {
         
-        let tabBarController = TabBarController()
-        tabBarController.delegate = self
+        configureTabBarController()
         
         navController = UINavigationController.init(rootViewController: tabBarController)
         navController.navigationBar.isHidden = true
     }
     
-    lazy var cameraVC: CameraViewControllerPresentation? = {
+    fileprivate func configureTabBarController() {
+        
+        tabBarController = TabBarController()
+        tabBarController.didSelect = { [unowned self] (vc) -> Void in
+            
+            /*
+             *  Сообщим контроллеру камеры об его активности
+             *  Контроллер включит/выключит камеру
+             */
+            if vc is CameraViewControllerPresentation {
+                self.cameraVC?.open()
+            } else {
+                self.cameraVC?.close()
+            }
+        }
+    }
+    
+    fileprivate func configureLocationManager() {
+        
+        locationManager = LocationManager()
+        locationManager?.updateLocation = { [unowned self] (location) -> Void in
+            
+            /*
+             *  Сообщим контроллеру камеры о пересечении с меткой
+             */
+            if self.tabBarController.selectedViewController is CameraViewControllerPresentation {
+                
+                let intersect = DataPoints.shared.intersectLocation(location)
+                
+                if intersect == true {
+                    // TODO i:
+                    print(intersect)
+                }
+            }
+        }
+    }
+    
+    fileprivate lazy var cameraVC: CameraViewControllerPresentation? = {
         var cameraVC: CameraViewControllerPresentation?
         
         if let tabBarController = navController.viewControllers.first as? TabBarController {
@@ -60,8 +99,8 @@ class AppCoordinator: NSObject, Coordinator {
         let authCoordinator: AuthCoordinatorPresentation = AuthCoordinator.init(navigationController: navController)
         authCoordinator.start(animated: animated)
         
-        authCoordinator.completion = { [weak self, weak authCoordinator] (auththorized) -> Void in
-            self?.removeChildCoordinator(authCoordinator!)
+        authCoordinator.completion = { [unowned self, unowned authCoordinator] (auththorized) -> Void in
+            self.removeChildCoordinator(authCoordinator)
         }
         
         addChildCoordinator(authCoordinator)
@@ -79,22 +118,6 @@ extension AppCoordinator: AppCoordinatorInterface {
     func logout() {
         DispatchQueue.main.async {
             self.openAuthorization(animated: true)
-        }
-    }
-}
-
-extension AppCoordinator: UITabBarControllerDelegate {
-    
-    func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
-        
-        /*
-         *  Сообщим контроллеру камеры об его активности
-         */
-        
-        if viewController is CameraViewControllerPresentation {
-            cameraVC?.open()
-        } else {
-            cameraVC?.close()
         }
     }
 }

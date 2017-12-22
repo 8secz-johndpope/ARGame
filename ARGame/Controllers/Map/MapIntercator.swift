@@ -17,7 +17,7 @@ protocol MapInteractorUseCase: class {
 class MapIntercator: MapInteractorUseCase {
 
     weak var output: MapInteractorOutput!
-    let db = Firestore.firestore()
+    var markers: Array<GMSMarker> = Array()
     
     func refreshData() {
         createData()
@@ -25,43 +25,25 @@ class MapIntercator: MapInteractorUseCase {
     
     func createData() {
         
-        db.collection("Portals").getDocuments() { [weak self] (querySnapshot, err) in
+        DataPoints.shared.download { [weak self] (points) in
             
-            if let err = err {
-                print("Error getting documents: \(err)")
-            } else {
-                self?.createData(querySnapshot!.documents)
+            guard let strongSelf = self
+                else { return }
+            
+            if let points = points {
+                strongSelf.createMarkers(points)
             }
+            
+            strongSelf.output.updateData(strongSelf.markers)
         }
     }
     
-    func createData(_ documents: Array<DocumentSnapshot>) {
+    func createMarkers(_ points: Array<ARPoint>) {
         
-        var data: Array<AnyObject> = Array()
-
-        for document in documents {
-            if let marker = self.createMarker(document.data()) {
-                data.append(marker)
-            }
+        markers.removeAll()
+        
+        for point in points {
+            markers.append(point.marker)
         }
-        
-        DispatchQueue.main.async { [weak self] in
-            self?.output.updateData(data)
-        }
-    }
-    
-    func createMarker(_ data: Dictionary<String, Any>) -> GMSMarker? {
-        
-        guard let coordinate = data["coordinate"] as? GeoPoint
-            else { return nil }
-        
-        let position = CLLocationCoordinate2D(latitude: coordinate.latitude, longitude: coordinate.longitude)
-        let marker = GMSMarker(position: position)
-        
-        if let name = data["name"] as? String {
-            marker.title = name
-        }
-
-        return marker
     }
 }

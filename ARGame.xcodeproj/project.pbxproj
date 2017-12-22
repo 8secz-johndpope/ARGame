@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		1F2E265A1FEA86BA0025371D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1F2E26591FEA86B90025371D /* GoogleService-Info.plist */; };
 		1F81C8341FCD9BB000E12BC4 /* UIViewController-KeyboardObserverProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F81C8331FCD9BB000E12BC4 /* UIViewController-KeyboardObserverProtocol.swift */; };
+		1F937CF71FEBA809001AA923 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F937CF61FEBA809001AA923 /* LocationManager.swift */; };
+		1F937CF91FEBD3E3001AA923 /* DataPoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F937CF81FEBD3E3001AA923 /* DataPoints.swift */; };
 		1F99F0791FE8EF430052E1F4 /* MapWireFrame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F99F0771FE8EF430052E1F4 /* MapWireFrame.swift */; };
 		1F99F07C1FE8EFBE0052E1F4 /* MapPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F99F07B1FE8EFBE0052E1F4 /* MapPresenter.swift */; };
 		1F99F07E1FE8EFD10052E1F4 /* MapIntercator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F99F07D1FE8EFD10052E1F4 /* MapIntercator.swift */; };
@@ -41,6 +43,8 @@
 /* Begin PBXFileReference section */
 		1F2E26591FEA86B90025371D /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		1F81C8331FCD9BB000E12BC4 /* UIViewController-KeyboardObserverProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController-KeyboardObserverProtocol.swift"; sourceTree = "<group>"; };
+		1F937CF61FEBA809001AA923 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
+		1F937CF81FEBD3E3001AA923 /* DataPoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataPoints.swift; sourceTree = "<group>"; };
 		1F99F0771FE8EF430052E1F4 /* MapWireFrame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapWireFrame.swift; sourceTree = "<group>"; };
 		1F99F07B1FE8EFBE0052E1F4 /* MapPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapPresenter.swift; sourceTree = "<group>"; };
 		1F99F07D1FE8EFD10052E1F4 /* MapIntercator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapIntercator.swift; sourceTree = "<group>"; };
@@ -140,6 +144,8 @@
 			children = (
 				1FF0E8451FC436E3004620B7 /* AppDelegate.swift */,
 				1FF0E8571FC43EDC004620B7 /* AppCoordinator.swift */,
+				1F937CF61FEBA809001AA923 /* LocationManager.swift */,
+				1F937CF81FEBD3E3001AA923 /* DataPoints.swift */,
 				1FF0E85E1FC453BF004620B7 /* Controllers */,
 				1FF0E84C1FC436E3004620B7 /* Assets.xcassets */,
 				1FF0E8511FC436E3004620B7 /* Info.plist */,
@@ -375,12 +381,14 @@
 				1FF0E8581FC43EDC004620B7 /* AppCoordinator.swift in Sources */,
 				1F99F0791FE8EF430052E1F4 /* MapWireFrame.swift in Sources */,
 				1F99F09A1FEA5A0F0052E1F4 /* String-Localized.swift in Sources */,
+				1F937CF91FEBD3E3001AA923 /* DataPoints.swift in Sources */,
 				1F81C8341FCD9BB000E12BC4 /* UIViewController-KeyboardObserverProtocol.swift in Sources */,
 				1FF0E8A41FC6AE29004620B7 /* AuthPhonePresenter.swift in Sources */,
 				1FF0E8A61FC6AE3F004620B7 /* AuthPhoneIntercator.swift in Sources */,
 				1FF0E8751FC58736004620B7 /* UIViewController-extension.swift in Sources */,
 				1FF0E87C1FC589D2004620B7 /* AuthPhoneViewController.swift in Sources */,
 				1F99F0881FE9032E0052E1F4 /* MapCoordinator.swift in Sources */,
+				1F937CF71FEBA809001AA923 /* LocationManager.swift in Sources */,
 				1F99F07E1FE8EFD10052E1F4 /* MapIntercator.swift in Sources */,
 				1FF0E8A21FC6AE0E004620B7 /* AuthPhoneWireFrame.swift in Sources */,
 				1FF0E85D1FC45357004620B7 /* Coordinator.swift in Sources */,

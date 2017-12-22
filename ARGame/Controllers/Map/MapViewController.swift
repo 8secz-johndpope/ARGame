@@ -55,7 +55,6 @@ class MapViewController: UIViewController, MapViewPresentation {
         mapView.clear()
         
         for obj in data {
-            
             if let marker = obj as? GMSMarker {
                 marker.map = mapView
             }

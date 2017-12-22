@@ -10,8 +10,11 @@ import UIKit
 
 class TabBarController: UITabBarController {
 
+    var didSelect: ((_ viewController: UIViewController) -> Void)?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        delegate = self
         configureControllers()
     }
     
@@ -26,3 +29,11 @@ class TabBarController: UITabBarController {
         viewControllers = [mapVC, cameraVC]
     }
 }
+
+extension TabBarController: UITabBarControllerDelegate {
+    
+    func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
+        didSelect?(viewController)
+    }
+}
+

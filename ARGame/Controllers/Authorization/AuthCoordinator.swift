@@ -17,7 +17,7 @@ protocol AuthCoordinatorPresentation: class {
 
 class AuthCoordinator: AuthCoordinatorPresentation {
 
-    internal var completion : ((_ authorized: Bool) -> Void)?
+    internal var completion: ((_ authorized: Bool) -> Void)?
     
     fileprivate var appNavController: UINavigationController!
     fileprivate var authNavController: UINavigationController?
@@ -42,8 +42,8 @@ class AuthCoordinator: AuthCoordinatorPresentation {
         authNavController = UINavigationController.init(rootViewController: vc)
         appNavController.present(authNavController!, animated: animated, completion: nil)
        
-        authPhone.moduleCompletion = { [weak self] () -> Void in
-            self?.openPinViewController()
+        authPhone.moduleCompletion = { [unowned self] () -> Void in
+            self.openPinViewController()
         }
     }
     
@@ -56,9 +56,9 @@ class AuthCoordinator: AuthCoordinatorPresentation {
         let vc: AuthPinViewController = AuthPinViewController.loadFromNib()
         authNavController?.pushViewController(vc, animated: true)
         
-        vc.completion = { [weak self] (success) -> Void in
-            self?.appNavController.dismiss(animated: true, completion: {
-                self?.completion?(success)
+        vc.completion = { [unowned self] (success) -> Void in
+            self.appNavController.dismiss(animated: true, completion: {
+                self.completion?(success)
             })
         }
     }

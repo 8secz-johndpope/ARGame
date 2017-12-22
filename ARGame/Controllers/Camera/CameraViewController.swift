@@ -33,7 +33,8 @@ class CameraViewController: UIViewController, CameraViewControllerPresentation {
     }
 
     func open() {
-        captureRequestAccess()
+        startCamera()
+        checkCaptureRequestAccess()
     }
     
     func close() {
@@ -41,41 +42,31 @@ class CameraViewController: UIViewController, CameraViewControllerPresentation {
     }
     
     func startCamera() {
+        
+        if captureSession == nil {
+            configureCaptureSession()
+        }
+
         captureSession?.startRunning()
-        timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(updateAlpha), userInfo: nil, repeats: true)
-        timer?.fire()
+        startTimer()
     }
     
     func stopCamera() {
-        timer?.invalidate()
+        stopTimer()
         captureSession?.stopRunning()
     }
     
-    func captureRequestAccess() {
-
-        /*
-         *  Проверим доступ, запустим камеру. Если доступа нет - алерт
-         */
+    func startTimer() {
         
-        AVCaptureDevice.requestAccess(for: AVMediaType.video, completionHandler: { [weak self] granted  in
-
-            DispatchQueue.main.async {
-                
-                if granted {
-                    
-                    if (self?.captureSession) != nil {
-                        self?.startCamera()
-                    } else {
-                        self?.configureCaptureSession()
-                        self?.startCamera()
-                    }
-                    
-                } else {
-                    self?.stopCamera()
-                    self?.showCameraPermissionAlert()
-                }
-            }
-        })
+        if timer == nil {
+            timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(updateImageViewAlpha), userInfo: nil, repeats: true)
+            timer?.fire()
+        }
+    }
+    
+    func stopTimer() {
+        timer?.invalidate()
+        timer = nil
     }
     
     func configureCaptureSession() {
@@ -116,12 +107,29 @@ class CameraViewController: UIViewController, CameraViewControllerPresentation {
         captureSession = session
     }
     
-    @objc func updateAlpha() {
+    @objc func updateImageViewAlpha() {
 
-        DispatchQueue.main.async { [weak self] in
+        DispatchQueue.main.async {
             let alpha = CGFloat(Float(arc4random()) / Float(UINT32_MAX))
-            self?.imageView_2.alpha = alpha
+            self.imageView_2.alpha = alpha
         }
+    }
+    
+    func checkCaptureRequestAccess() {
+        
+        /*
+         *  Если нет доступа к камере покажем алерт, напомним пользователю
+         */
+        
+        AVCaptureDevice.requestAccess(for: AVMediaType.video, completionHandler: { granted  in
+            
+            if !granted {
+                DispatchQueue.main.async {
+                    self.stopCamera()
+                    self.showCameraPermissionAlert()
+                }
+            }
+        })
     }
     
     func showCameraPermissionAlert() {
@@ -145,11 +153,11 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
         let filter = CIFilter(name: "CIEdges")!
         filter.setValue(cameraImage, forKey: kCIInputImageKey)
         
-        DispatchQueue.main.async { [weak self] in
+        DispatchQueue.main.async {
             
             if let outputValue = filter.value(forKey: kCIOutputImageKey) as? CIImage {
-                self?.imageView.image = UIImage(ciImage: cameraImage)
-                self?.imageView_2.image = UIImage(ciImage: outputValue)
+                self.imageView.image = UIImage(ciImage: cameraImage)
+                self.imageView_2.image = UIImage(ciImage: outputValue)
             }
         }
     }
