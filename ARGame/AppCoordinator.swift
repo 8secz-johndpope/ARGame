@@ -72,7 +72,7 @@ class AppCoordinator: Coordinator {
             let intersect = DataPoints.shared.intersectLocation(location)
             
             DispatchQueue.main.async {
-                self.cameraVC?.fire = intersect
+                self.cameraVC?.setFire(intersect)
             }
         }
     }

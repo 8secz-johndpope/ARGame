@@ -18,6 +18,29 @@ class DataPoints {
     
     static let shared = DataPoints()
     private init() {
+        
+//        let q_one = DispatchQueue(label: "one")
+//        let q_two = DispatchQueue(label: "two")
+//        let group = DispatchGroup()
+//        
+//        var counter = 0
+//        var mutex = pthread_mutex_t()
+//        pthread_mutex_init(&mutex, nil)
+//        
+//        func operation() {
+//            for _ in 0 ..< 800 {
+//                pthread_mutex_lock(&mutex)
+//                counter += 1
+//                print(Thread.current, counter)
+//                pthread_mutex_unlock(&mutex)
+//            }
+//            print("finished")
+//        }
+//
+//        q_one.async(execute: operation)
+//        q_two.async(execute: operation)
+//
+//        print(counter)
     }
     
     func download(completion: @escaping ((Array<ARPoint>)?) -> Void) {
@@ -45,8 +68,7 @@ class DataPoints {
         
         var intersect = false
         
-        if let points = getPoints() {
-            
+        queue.sync {
             for point in points {
                 let locationPoint: CLLocation = CLLocation(latitude: point.marker.position.latitude,
                                                            longitude: point.marker.position.longitude)
@@ -58,7 +80,7 @@ class DataPoints {
                 }
             }
         }
-
+        
         return intersect
     }
 }
@@ -93,20 +115,15 @@ extension DataPoints {
     
     func createPoints(_ documents: Array<DocumentSnapshot>, completion: (()->())?) {
         
-       // let queue = DispatchQueue(label: "DataPoints.createPoints.queue")
+        self.removePoints()
         
-       // queue.async() { [unowned self] in
-            
-            self.removePoints()
-            
-            for document in documents {
-                if let point = self.createPoint(document.data()) {
-                    self.addPoint(point)
-                }
+        for document in documents {
+            if let point = self.createPoint(document.data()) {
+                self.addPoint(point)
             }
-            
-            completion?()
-       // }
+        }
+        
+        completion?()
     }
     
     func createPoint(_ data: Dictionary<String, Any>) -> ARPoint? {
@@ -118,14 +135,13 @@ extension DataPoints {
             else { return nil }
         
         let position = CLLocationCoordinate2D(latitude: coordinate.latitude, longitude: coordinate.longitude)
-        let marker = GMSMarker(position: position)
+        let marker = GMSMarker(position: position) // GMSMarker создается на main thread, иначе краш
         
         if let name = data["name"] as? String {
             marker.title = name
         }
         
         let address = data["address"] as? String
-        
         let point = ARPoint(marker: marker, radius: radius, address: address)
 
         return point

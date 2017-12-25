@@ -13,8 +13,8 @@ protocol CameraViewControllerPresentation: class {
     func open()
     func close()
     
-    // включает фильтр пункта назначения
-    var fire: Bool { get set }
+    // управление фильтром пункта назначения
+    func setFire(_ value: Bool)
 }
 
 class CameraViewController: UIViewController, CameraViewControllerPresentation {
@@ -28,9 +28,9 @@ class CameraViewController: UIViewController, CameraViewControllerPresentation {
     
     var captureSession: AVCaptureSession?
     var timer: Timer?
-    var fire: Bool = false {
+    var fire: Atomic = Atomic(value: false) {
         didSet(fire) {
-            if fire == true {
+            if fire.value == true {
                 self.stopTimer()
                 self.imageView_2.alpha = 1.0;
             } else {
@@ -38,7 +38,7 @@ class CameraViewController: UIViewController, CameraViewControllerPresentation {
             }
         }
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Camera"
@@ -46,13 +46,17 @@ class CameraViewController: UIViewController, CameraViewControllerPresentation {
 
     func open() {
         startCamera()
-        checkCaptureRequestAccess()
+        checkCaptureSessionRequestAccess()
     }
     
     func close() {
         stopCamera()
     }
     
+    func setFire(_ value: Bool) {
+        fire.value = value
+    }
+
     func startCamera() {
         
         if captureSession == nil {
@@ -61,7 +65,7 @@ class CameraViewController: UIViewController, CameraViewControllerPresentation {
 
         captureSession?.startRunning()
         
-        if fire == false {
+        if fire.value == false {
             startTimer()
         }
     }
@@ -130,7 +134,7 @@ class CameraViewController: UIViewController, CameraViewControllerPresentation {
         }
     }
     
-    func checkCaptureRequestAccess() {
+    func checkCaptureSessionRequestAccess() {
         
         /*
          *  Если нет доступа к камере покажем алерт, напомним пользователю
@@ -167,7 +171,7 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
 
         var filter: CIFilter!
         
-        if fire == true {
+        if fire.value == true {
             filter = CIFilter(name: "CIComicEffect")!
         } else {
             filter = CIFilter(name: "CIEdges")!
