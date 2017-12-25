@@ -34,7 +34,7 @@ class CameraViewController: UIViewController, CameraViewControllerPresentation {
                 self.stopTimer()
                 self.imageView_2.alpha = 1.0;
             } else {
-                self.startTimer()
+               // self.startTimer()
             }
         }
     }
@@ -66,7 +66,7 @@ class CameraViewController: UIViewController, CameraViewControllerPresentation {
         captureSession?.startRunning()
         
         if fire.value == false {
-            startTimer()
+           // startTimer()
         }
     }
     

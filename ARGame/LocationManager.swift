@@ -17,6 +17,7 @@ class LocationManager: NSObject {
     override init() {
         super.init()
         
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
         locationManager.delegate = self
         locationManager.startUpdatingLocation()
     }
