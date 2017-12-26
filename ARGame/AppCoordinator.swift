@@ -70,10 +70,7 @@ class AppCoordinator: Coordinator {
              *  При пересечении с меткой изменяется изображение.
              */
             let intersect = DataPoints.shared.intersectLocation(location)
-            
-            DispatchQueue.main.async {
-                self.cameraVC?.setFire(intersect)
-            }
+            self.cameraVC?.setFire(intersect)
         }
     }
     

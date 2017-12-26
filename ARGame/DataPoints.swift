@@ -63,26 +63,6 @@ class DataPoints {
             }
         }
     }
-    
-    func intersectLocation(_ location: CLLocation) -> Bool {
-        
-        var intersect = false
-        
-        queue.sync {
-            for point in points {
-                let locationPoint: CLLocation = CLLocation(latitude: point.marker.position.latitude,
-                                                           longitude: point.marker.position.longitude)
-                let distance = location.distance(from: locationPoint)
-                
-                if distance <= point.radius {
-                    intersect = true
-                    break;
-                }
-            }
-        }
-        
-        return intersect
-    }
 }
 
 struct ARPoint {
@@ -145,5 +125,25 @@ extension DataPoints {
         let point = ARPoint(marker: marker, radius: radius, address: address)
 
         return point
+    }
+    
+    func intersectLocation(_ location: CLLocation) -> Bool {
+        
+        var intersect = false
+        
+        queue.sync {
+            for point in points {
+                let locationPoint: CLLocation = CLLocation(latitude: point.marker.position.latitude,
+                                                           longitude: point.marker.position.longitude)
+                let distance = location.distance(from: locationPoint)
+                
+                if distance <= point.radius {
+                    intersect = true
+                    break;
+                }
+            }
+        }
+        
+        return intersect
     }
 }

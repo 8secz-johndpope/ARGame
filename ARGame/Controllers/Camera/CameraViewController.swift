@@ -13,7 +13,7 @@ protocol CameraViewControllerPresentation: class {
     func open()
     func close()
     
-    // управление фильтром пункта назначения
+    // управление фильтрами камеры
     func setFire(_ value: Bool)
 }
 
@@ -21,29 +21,19 @@ class CameraViewController: UIViewController, CameraViewControllerPresentation {
     
     /* imageView_2 над imageView
      * imageView без фильтра
-     * imageView_2 с фильтром, изменяется alpha по таймеру
+     * imageView_2 с фильтром
      */
     @IBOutlet weak var imageView: UIImageView!
-    @IBOutlet weak var imageView_2: UIImageView!
-    
-    var captureSession: AVCaptureSession?
-    var timer: Timer?
-    var fire: Atomic = Atomic(value: false) {
-        didSet(fire) {
-            if fire.value == true {
-                self.stopTimer()
-                self.imageView_2.alpha = 1.0;
-            } else {
-               // self.startTimer()
-            }
+    @IBOutlet weak var imageView_2: UIImageView! {
+        didSet {
+            self.imageView_2.alpha = 0.75;
         }
     }
+    
+    var captureSession: AVCaptureSession?
+    var fire: Atomic = Atomic(value: false)
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        title = "Camera"
-    }
-
+    // MARK: - CameraViewControllerPresentation
     func open() {
         startCamera()
         checkCaptureSessionRequestAccess()
@@ -57,6 +47,7 @@ class CameraViewController: UIViewController, CameraViewControllerPresentation {
         fire.value = value
     }
 
+    // MARK: - Camera methods
     func startCamera() {
         
         if captureSession == nil {
@@ -64,30 +55,12 @@ class CameraViewController: UIViewController, CameraViewControllerPresentation {
         }
 
         captureSession?.startRunning()
-        
-        if fire.value == false {
-           // startTimer()
-        }
     }
     
     func stopCamera() {
-        stopTimer()
         captureSession?.stopRunning()
     }
-    
-    func startTimer() {
-        
-        if timer == nil {
-            timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(updateImageViewAlpha), userInfo: nil, repeats: true)
-            timer?.fire()
-        }
-    }
-    
-    func stopTimer() {
-        timer?.invalidate()
-        timer = nil
-    }
-    
+
     func configureCaptureSession() {
 
         let session = AVCaptureSession()
@@ -125,26 +98,16 @@ class CameraViewController: UIViewController, CameraViewControllerPresentation {
         
         captureSession = session
     }
-    
-    @objc func updateImageViewAlpha() {
 
-        DispatchQueue.main.async {
-            let alpha = CGFloat(Float(arc4random()) / Float(UINT32_MAX))
-            self.imageView_2.alpha = alpha
-        }
-    }
-    
     func checkCaptureSessionRequestAccess() {
         
         /*
          *  Если нет доступа к камере покажем алерт, напомним пользователю
          */
-        
         AVCaptureDevice.requestAccess(for: AVMediaType.video, completionHandler: { granted  in
             
             if !granted {
                 DispatchQueue.main.async {
-                    self.stopCamera()
                     self.showCameraPermissionAlert()
                 }
             }
@@ -155,6 +118,18 @@ class CameraViewController: UIViewController, CameraViewControllerPresentation {
         let alertController = UIAlertController(title: "Alert", message: "permission_camera".lcd, preferredStyle: .alert)
         alertController.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
         self.present(alertController, animated: true, completion: nil)
+    }
+    
+    func filter() -> CIFilter? {
+        var filter: CIFilter?
+        
+        if fire.value == true {
+            filter = CIFilter(name: "CISpotColor")
+        } else {
+            filter = CIFilter(name: "CIEdges")
+        }
+        
+        return filter
     }
 }
 
@@ -167,22 +142,17 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
         guard let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
             else { return }
 
+        guard let filter = filter()
+            else { return }
+        
         let cameraImage = CIImage(cvPixelBuffer: pixelBuffer)
-
-        var filter: CIFilter!
-        
-        if fire.value == true {
-            filter = CIFilter(name: "CIComicEffect")!
-        } else {
-            filter = CIFilter(name: "CIEdges")!
-        }
-        
         filter.setValue(cameraImage, forKey: kCIInputImageKey)
         
         DispatchQueue.main.async {
             
+            self.imageView.image = UIImage(ciImage: cameraImage)
+            
             if let outputValue = filter.value(forKey: kCIOutputImageKey) as? CIImage {
-                self.imageView.image = UIImage(ciImage: cameraImage)
                 self.imageView_2.image = UIImage(ciImage: outputValue)
             }
         }

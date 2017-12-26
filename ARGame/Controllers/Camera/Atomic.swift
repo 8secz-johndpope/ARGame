@@ -10,7 +10,7 @@ import UIKit
 
 class Atomic<T> {
 
-    fileprivate var _val: T!
+    fileprivate var _val: T
     fileprivate var val_mutex = pthread_mutex_t()
     
     init (value: T) {
@@ -21,7 +21,7 @@ class Atomic<T> {
     var value: T {
         get {
             pthread_mutex_lock(&val_mutex)
-            let result = _val!
+            let result = _val
             defer {
                 pthread_mutex_unlock(&val_mutex)
             }
