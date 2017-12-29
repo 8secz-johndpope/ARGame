@@ -10,9 +10,12 @@ import UIKit
 
 protocol AppCoordinatorInterface: class {
     
+    /// Базовый навигационный контроллер
     var navController: UINavigationController! { get set }
-    
+
+    /// Метод запускает жизненный цикл приложения
     func start()
+    /// Метод запускает авторизацию
     func logout()
 }
 
@@ -25,17 +28,14 @@ class AppCoordinator: Coordinator {
     fileprivate var locationManager: LocationManager?
     
     init() {
-        configureAppContent()
-        configureLocationManager()
+        configureAppUIContent()
     }
     
-    fileprivate func configureAppContent() {
-        
-        /*
-         *  navController - базовый навигационный контроллер.
-         *  Все что нужно запустить над TabBarController, например авторизацию, запускаем в navController.
-         *  В TabBarController, если нужна навигация внутри TabBarItem, TabBarItem запускается со своим навигационным контроллером
-         */
+    /** Создает контент приложения.
+        navController - базовый навигационный контроллер.
+        Все контроллеры которые нужно запустить над TabBarController, например авторизацию, запускаем в navController.
+        В TabBarController, если нужна навигация внутри TabBarItem, TabBarItem запускается со своим навигационным контроллером */
+    fileprivate func configureAppUIContent() {
         
         configureTabBarController()
         
@@ -47,11 +47,8 @@ class AppCoordinator: Coordinator {
         
         tabBarController = TabBarController()
         tabBarController.didSelect = { [unowned self] (vc) -> Void in
-            
-            /*
-             *  Сообщим контроллеру камеры об его активности.
-             *  Контроллер включит/выключит камеру.
-             */
+            /// Сообщим контроллеру камеры об его активности.
+            /// Контроллер включит/выключит камеру.
             if vc is CameraViewControllerPresentation {
                 self.cameraVC?.open()
             } else {
@@ -64,11 +61,8 @@ class AppCoordinator: Coordinator {
         
         locationManager = LocationManager()
         locationManager?.updateLocation = { [unowned self] (location) -> Void in
-            
-            /*
-             *  Сообщим контроллеру камеры о пересечении с меткой.
-             *  При пересечении с меткой изменяется изображение.
-             */
+            /// Сообщим контроллеру камеры о пересечении с меткой.
+            /// При пересечении с меткой изменяется изображение.
             let intersect = DataPoints.shared.intersectLocation(location)
             self.cameraVC?.setFire(intersect)
         }
@@ -93,12 +87,38 @@ class AppCoordinator: Coordinator {
         
         return cameraVC
     }()
-    
-    fileprivate func openAuthorization(animated: Bool) {
+}
+
+extension AppCoordinator: AppCoordinatorInterface {
+
+    func start() {
         
-        /*
-         *  Запускает кейс авторизации
-         */
+        if Authorization.shared.status == false {
+            DispatchQueue.main.async {
+                if self.canOpenAuth() {
+                    self.openAuth(animated: false)
+                }
+            }
+        }
+        
+        self.configureAuth()
+        self.configureLocationManager()
+    }
+    
+    func logout() {
+        DispatchQueue.main.async {
+            if self.canOpenAuth() {
+                self.openAuth(animated: true)
+            }
+        }
+    }
+}
+
+extension AppCoordinator {
+    
+    /// Запускает кейс авторизации
+    fileprivate func openAuth(animated: Bool) {
+
         let authCoordinator: AuthCoordinatorPresentation = AuthCoordinator.init(navigationController: navController)
         authCoordinator.start(animated: animated)
         
@@ -108,19 +128,24 @@ class AppCoordinator: Coordinator {
         
         addChildCoordinator(authCoordinator)
     }
-}
-
-extension AppCoordinator: AppCoordinatorInterface {
     
-    func start() {
-        DispatchQueue.main.async {
-            self.openAuthorization(animated: false)
+    fileprivate func configureAuth() {
+        /// подпишемся на изменение статуса авторизации
+        Authorization.shared.addStateDidChangeListener { [unowned self] (auth) in
+            if auth == false {
+                self.logout()
+            }
         }
     }
     
-    func logout() {
-        DispatchQueue.main.async {
-            self.openAuthorization(animated: true)
+    /// Проверка на возможность запуска авторизации
+    fileprivate func canOpenAuth() -> Bool {
+        
+        if childCoordinators.last is AuthCoordinatorPresentation {
+            /// авторизация уже вызвана
+            return false
         }
+
+        return true
     }
 }

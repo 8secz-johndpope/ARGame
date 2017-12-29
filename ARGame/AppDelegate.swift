@@ -32,7 +32,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window!.rootViewController = appCoordinator!.navController
         window!.makeKeyAndVisible()
 
-        //appCoordinator!.start()
+        appCoordinator!.start()
     }
     
     func initializeFrameworks () {
@@ -42,5 +42,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // Firebase
         FirebaseApp.configure()
+        let lang = Locale.current.languageCode
+        Auth.auth().languageCode = lang
+    }
+    
+    func application(_ application: UIApplication,
+                     didReceiveRemoteNotification notification: [AnyHashable : Any],
+                     fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+        
+        if Auth.auth().canHandleNotification(notification) {
+            completionHandler(.noData)
+            return
+        }
+        
+        // This notification is not auth related, developer should handle it.
+        //handleNotification(notification)
     }
 }

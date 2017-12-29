@@ -10,6 +10,7 @@ import UIKit
 
 protocol AuthPhoneViewPresentation: class {
     func getData() -> String?
+    func showAlert(_ message: String?)
 }
 
 class AuthPhoneViewController: UIViewController, AuthPhoneViewPresentation {
@@ -23,11 +24,12 @@ class AuthPhoneViewController: UIViewController, AuthPhoneViewPresentation {
     @IBOutlet weak var phoneField: UITextField! {
         didSet {
             phoneField.keyboardType = .phonePad
+            phoneField.textAlignment = .center
         }
     }
     @IBOutlet weak var doneButton: UIButton! {
         didSet {
-            doneButton.setTitle("Done", for: .normal)
+            doneButton.setTitle("auth_button_done".lcd, for: .normal)
             doneButton.addTarget(self, action: #selector(donePressed), for: .touchUpInside)
         }
     }
@@ -53,11 +55,22 @@ class AuthPhoneViewController: UIViewController, AuthPhoneViewPresentation {
 
     // MARK: - Configure
     func configureViews () {
-        title = "Phone"
+        title = "auth_title".lcd
         view.backgroundColor = .white
 
         let tap = UITapGestureRecognizer(target: self, action: #selector(viewTapped))
         view.addGestureRecognizer(tap)
+    }
+    
+    // MARK: - AuthPhoneViewPresentation
+    func getData() -> String? {
+        return phoneField.text
+    }
+    
+    func showAlert(_ message: String?) {
+        let alertController = UIAlertController(title: "alert_title_message".lcd, message: message, preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+        self.present(alertController, animated: true, completion: nil)
     }
     
     // MARK: - Actions
@@ -72,11 +85,6 @@ class AuthPhoneViewController: UIViewController, AuthPhoneViewPresentation {
     
     func endEditing() {
         view.endEditing(true)
-    }
-    
-    // MARK: - Data
-    func getData() -> String? {
-        return ""
     }
 }
 

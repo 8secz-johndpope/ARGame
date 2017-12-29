@@ -41,19 +41,20 @@ class AuthCoordinator: AuthCoordinatorPresentation {
         let vc = authPhone.createModule()
         authNavController = UINavigationController.init(rootViewController: vc)
         appNavController.present(authNavController!, animated: animated, completion: nil)
-       
-        authPhone.moduleCompletion = { [unowned self] () -> Void in
-            self.openPinViewController()
+
+        authPhone.moduleCompletion = { [unowned self] (verificationID) -> Void in
+            self.openPinViewController(verificationID)
         }
     }
     
-    fileprivate func openPinViewController () {
+    fileprivate func openPinViewController(_ verificationID: String) {
         
         /*  TODO i:
          *  Когда будет макет сделать по аналогии с AuthPhoneWireFramePresentation
          */
         
         let vc: AuthPinViewController = AuthPinViewController.loadFromNib()
+        vc.verificationID = verificationID
         authNavController?.pushViewController(vc, animated: true)
         
         vc.completion = { [unowned self] (success) -> Void in

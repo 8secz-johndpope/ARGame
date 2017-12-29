@@ -107,6 +107,7 @@ extension DataPoints {
     }
     
     func createPoint(_ data: Dictionary<String, Any>) -> ARPoint? {
+        /// GMSMarker создается на main thread, иначе краш
         
         guard let coordinate = data["coordinate"] as? GeoPoint
             else { return nil }
@@ -115,7 +116,7 @@ extension DataPoints {
             else { return nil }
         
         let position = CLLocationCoordinate2D(latitude: coordinate.latitude, longitude: coordinate.longitude)
-        let marker = GMSMarker(position: position) // GMSMarker создается на main thread, иначе краш
+        let marker = GMSMarker(position: position)
         
         if let name = data["name"] as? String {
             marker.title = name

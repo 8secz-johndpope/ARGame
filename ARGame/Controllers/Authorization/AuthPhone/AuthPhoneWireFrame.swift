@@ -10,16 +10,16 @@ import UIKit
 
 protocol AuthPhoneWireFramePresentation: class {
     func createModule() -> UIViewController
-    var moduleCompletion: (() -> Void)? { get set }
+    var moduleCompletion: ((_ verificationID: String) -> Void)? { get set }
 }
 
 protocol AuthPhonePresenterOutput: class {
-    func presenterCompletion()
+    func presenterCompletion(_ verificationID: String)
 }
 
 class AuthPhoneWireFrame: AuthPhoneWireFramePresentation {
     
-    var moduleCompletion: (() -> Void)?
+    var moduleCompletion: ((String) -> Void)?
 
     deinit {
         
@@ -45,7 +45,7 @@ class AuthPhoneWireFrame: AuthPhoneWireFramePresentation {
 
 extension AuthPhoneWireFrame: AuthPhonePresenterOutput {
     
-    func presenterCompletion() {
-        moduleCompletion?()
+    func presenterCompletion(_ verificationID: String) {
+        moduleCompletion?(verificationID)
     }
 }

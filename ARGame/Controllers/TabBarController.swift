@@ -14,6 +14,7 @@ class TabBarController: UITabBarController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         delegate = self
         configureControllers()
     }
@@ -22,11 +23,17 @@ class TabBarController: UITabBarController {
         
         let mapVC = MapCoordinator().navController
         mapVC.tabBarItem.title = "tab_item_map".lcd
+        mapVC.tabBarItem.image = UIImage(named: "tab_bar_locate")
         
         let cameraVC = CameraViewController()
         cameraVC.tabBarItem.title = "tab_item_camera".lcd
+        cameraVC.tabBarItem.image = UIImage(named: "tab_bar_camera")
 
-        viewControllers = [mapVC, cameraVC]
+        let menuVC = UIViewController()
+        menuVC.tabBarItem.title = "tab_item_menu".lcd
+        menuVC.tabBarItem.image = UIImage(named: "tab_bar_menu")
+        
+        viewControllers = [mapVC, cameraVC, menuVC]
     }
 }
 

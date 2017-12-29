@@ -26,7 +26,7 @@ class MapViewController: UIViewController, MapViewPresentation {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Map"
+        title = "tab_item_map".lcd
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -41,6 +41,7 @@ class MapViewController: UIViewController, MapViewPresentation {
         mapView.settings.myLocationButton = true
         view = mapView
         
+        /// при старте карты нацелимся на текущую локацию
         locationManager.delegate = self
         locationManager.startUpdatingLocation()
     }
@@ -73,17 +74,5 @@ extension MapViewController: CLLocationManagerDelegate {
         mapView.animate(to: camera)
 
         locationManager.stopUpdatingLocation()
-        
-        /*
-        let circle = GMSCircle()
-        circle.radius = 20 // Meters
-        circle.fillColor = UIColor.red.withAlphaComponent(0.3)
-        circle.position = location.coordinate // Your CLLocationCoordinate2D  position
-        //circle.strokeWidth = 5;
-        //circle.strokeColor = UIColor.black
-        
-        mapView.clear()
-        circle.map = mapView;
-         */
     }
 }

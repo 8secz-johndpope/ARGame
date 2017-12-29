@@ -8,7 +8,7 @@ target 'ARGame' do
   
   pod 'Firebase/Core'
   pod 'Firebase/Firestore'
+  pod 'Firebase/Auth'
   pod 'GoogleMaps'
-  #pod 'GooglePlaces'
 
 end

@@ -24,7 +24,9 @@ extension KeyboardObserverProtocol where Self: UIViewController {
     }
     
     func removeKeyboardObserver() {
-        NotificationCenter.default.removeObserver(self)
+        NotificationCenter.default.removeObserver(self,
+                                                  name: NSNotification.Name.UIKeyboardWillChangeFrame,
+                                                  object: nil)
     }
 
     func keyboardWillChangeFrame(notification: NSNotification) {}

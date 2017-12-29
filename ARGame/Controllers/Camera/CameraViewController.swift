@@ -13,13 +13,13 @@ protocol CameraViewControllerPresentation: class {
     func open()
     func close()
     
-    // управление фильтрами камеры
+    /// Управление фильтрами камеры
     func setFire(_ value: Bool)
 }
 
 class CameraViewController: UIViewController, CameraViewControllerPresentation {
     
-    /* imageView_2 над imageView
+    /* imageView под imageView_2
      * imageView без фильтра
      * imageView_2 с фильтром
      */
@@ -35,12 +35,16 @@ class CameraViewController: UIViewController, CameraViewControllerPresentation {
 
     // MARK: - CameraViewControllerPresentation
     func open() {
-        startCamera()
-        checkCaptureSessionRequestAccess()
+        DispatchQueue.main.async {
+            self.startCamera()
+            self.checkCaptureSessionRequestAccess()
+        }
     }
     
     func close() {
-        stopCamera()
+        DispatchQueue.main.async {
+            self.stopCamera()
+        }
     }
     
     func setFire(_ value: Bool) {
@@ -99,13 +103,10 @@ class CameraViewController: UIViewController, CameraViewControllerPresentation {
         captureSession = session
     }
 
+    /// Если нет доступа к камере покажем алерт, напомним пользователю
     func checkCaptureSessionRequestAccess() {
         
-        /*
-         *  Если нет доступа к камере покажем алерт, напомним пользователю
-         */
         AVCaptureDevice.requestAccess(for: AVMediaType.video, completionHandler: { granted  in
-            
             if !granted {
                 DispatchQueue.main.async {
                     self.showCameraPermissionAlert()
@@ -115,7 +116,7 @@ class CameraViewController: UIViewController, CameraViewControllerPresentation {
     }
     
     func showCameraPermissionAlert() {
-        let alertController = UIAlertController(title: "Alert", message: "permission_camera".lcd, preferredStyle: .alert)
+        let alertController = UIAlertController(title: "Alert", message: "alert_camera".lcd, preferredStyle: .alert)
         alertController.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
         self.present(alertController, animated: true, completion: nil)
     }

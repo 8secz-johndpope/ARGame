@@ -13,7 +13,8 @@ protocol AuthPhonePresentation: class {
 }
 
 protocol AuthPhoneInteractorOutput: class {
-    func phoneValidation(_ value: Bool)
+    func phoneVerified(_ verificationID: String)
+    func phoneVerifyError(_ error: String)
 }
 
 class AuthPhonePresenter: AuthPhonePresentation {
@@ -28,16 +29,17 @@ class AuthPhonePresenter: AuthPhonePresentation {
 
     func donePressed() {
         let phone = view?.getData()
-        interactor?.validationPhone(phone)
+        interactor?.verifyPhone(phone)
     }
 }
 
 extension AuthPhonePresenter: AuthPhoneInteractorOutput {
     
-    func phoneValidation(_ value: Bool) {
-        
-        if value == true {
-            wareFrame?.presenterCompletion()
-        }
+    func phoneVerified(_ verificationID: String) {
+        wareFrame?.presenterCompletion(verificationID)
+    }
+    
+    func phoneVerifyError(_ message: String) {
+        view?.showAlert(message)
     }
 }

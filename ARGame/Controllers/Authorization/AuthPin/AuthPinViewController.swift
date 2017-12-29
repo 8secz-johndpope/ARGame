@@ -10,6 +10,7 @@ import UIKit
 
 class AuthPinViewController: UIViewController {
 
+    var verificationID: String?
     var completion: ((_ success: Bool) -> Void)?
 
     @IBOutlet weak var codeLabel: UILabel! {
@@ -20,7 +21,7 @@ class AuthPinViewController: UIViewController {
     }
     @IBOutlet weak var doneButton: UIButton! {
         didSet {
-            doneButton.setTitle("Done", for: .normal)
+            doneButton.setTitle("pin_button_done".lcd, for: .normal)
             doneButton.addTarget(self, action: #selector(donePressed), for: .touchUpInside)
         }
     }
@@ -32,8 +33,9 @@ class AuthPinViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        title = "sms code"
+        title = "pin_title".lcd
         view.backgroundColor = .yellow
+        navigationItem.hidesBackButton = true
     }
     
     // MARK: - Actions

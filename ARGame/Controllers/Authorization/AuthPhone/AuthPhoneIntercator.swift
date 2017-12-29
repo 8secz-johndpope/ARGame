@@ -7,9 +7,10 @@
 //
 
 import UIKit
+import Firebase
 
 protocol AuthPhoneInteractorUseCase: class {
-    func validationPhone(_ phone: String?)
+    func verifyPhone(_ phoneNumber: String?)
 }
 
 class AuthPhoneInteractor: AuthPhoneInteractorUseCase {
@@ -20,8 +21,37 @@ class AuthPhoneInteractor: AuthPhoneInteractorUseCase {
        
     }
     
-    func validationPhone(_ phone: String?) {
-        output.phoneValidation(true)
+    func verifyPhone(_ phoneNumber: String?) {
+        
+        guard var phoneNumber = phoneNumber
+            else { return }
+        
+        phoneNumber = "+" + phoneNumber
+
+        Authorization.shared.verifyPhoneNumber(phoneNumber) { [weak self] (verificationID, error) in
+            
+            if let error = error {
+                print(error.localizedDescription)
+                self?.phoneVerifyError(error.localizedDescription)
+            } else {
+                if let verificationID = verificationID {
+                    self?.phoneVerified(verificationID)
+                } else {
+                    self?.phoneVerifyError("alert_wrong".lcd)
+                }
+            }
+        }
+    }
+
+    func phoneVerified(_ verificationID: String) {
+        DispatchQueue.main.async {
+            self.output.phoneVerified(verificationID)
+        }
+    }
+    
+    func phoneVerifyError(_ message: String) {
+        DispatchQueue.main.async {
+            self.output.phoneVerifyError(message)
+        }
     }
 }
-
