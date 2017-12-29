@@ -13,9 +13,9 @@ protocol AppCoordinatorInterface: class {
     /// Базовый навигационный контроллер
     var navController: UINavigationController! { get set }
 
-    /// Метод запускает жизненный цикл приложения
+    /// Запускает жизненный цикл приложения
     func start()
-    /// Метод запускает авторизацию
+    /// Запускает авторизацию
     func logout()
 }
 
@@ -72,11 +72,8 @@ class AppCoordinator: Coordinator {
         var cameraVC: CameraViewControllerPresentation?
         
         if let tabBarController = navController.viewControllers.first as? TabBarController {
-            
             if ((tabBarController.viewControllers) != nil) {
-                
                 for viewController in tabBarController.viewControllers! {
-
                     if let vc = viewController as? CameraViewControllerPresentation {
                         cameraVC = vc
                         break;
@@ -118,7 +115,6 @@ extension AppCoordinator {
     
     /// Запускает кейс авторизации
     fileprivate func openAuth(animated: Bool) {
-
         let authCoordinator: AuthCoordinatorPresentation = AuthCoordinator.init(navigationController: navController)
         authCoordinator.start(animated: animated)
         
