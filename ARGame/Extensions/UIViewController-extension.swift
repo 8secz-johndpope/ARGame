@@ -13,3 +13,12 @@ extension UIViewController {
         return T(nibName: String(describing: self), bundle: nil)
     }
 }
+
+extension UIViewController {
+    
+    func showAlertController(_ message: String?) {
+        let alertController = UIAlertController(title: "alert_title_message".lcd, message: message, preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+        self.present(alertController, animated: true, completion: nil)
+    }
+}

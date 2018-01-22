@@ -11,12 +11,16 @@ import UIKit
 class AuthPinViewController: UIViewController {
 
     var verificationID: String?
-    var completion: ((_ success: Bool) -> Void)?
-
-    @IBOutlet weak var codeLabel: UILabel! {
+    var completion: ((_ user: AnyObject) -> Void)?
+    
+    @IBOutlet weak var stackView: UIStackView!
+    @IBOutlet weak var topView: UIView!
+    @IBOutlet weak var bottomView: UIView!
+    @IBOutlet weak var bottomConstraint: NSLayoutConstraint!
+    @IBOutlet weak var pinField: UITextField! {
         didSet {
-            codeLabel.text = "328556"
-            codeLabel.textAlignment = .center
+            pinField.keyboardType = .phonePad
+            pinField.textAlignment = .center
         }
     }
     @IBOutlet weak var doneButton: UIButton! {
@@ -26,20 +30,80 @@ class AuthPinViewController: UIViewController {
         }
     }
     
+    fileprivate lazy var pinViewModel: AuthPinViewModelPresentation = {
+        var pinViewModel: AuthPinViewModelPresentation = AuthPinViewModel()
+        
+        pinViewModel.refreshing = { [unowned self] (value) -> Void in
+            
+        }
+        
+        pinViewModel.completion = { [unowned self] (user) -> Void in
+            self.completion?(user)
+        }
+        
+        pinViewModel.showAlert = { [unowned self] (message) -> Void in
+            self.showAlertController(message)
+        }
+        
+        return pinViewModel
+    }()
+    
     deinit {
        print("")
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        configureViews()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        addKeyboardObserver()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        removeKeyboardObserver()
+    }
+    
+    // MARK: - Configure
+    func configureViews () {
         title = "pin_title".lcd
         view.backgroundColor = .yellow
         navigationItem.hidesBackButton = true
+        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(viewTapped))
+        view.addGestureRecognizer(tap)
     }
     
     // MARK: - Actions
     @objc func donePressed () {
-        completion?(true)
+        endEditing()
+        pinViewModel.signIn(verificationID, pinField.text)
+    }
+    
+    @objc func viewTapped() {
+        endEditing()
+    }
+    
+    func endEditing() {
+        view.endEditing(true)
+    }
+}
+
+extension AuthPinViewController: KeyboardObserverProtocol {
+    
+    @objc func keyboardWillChangeFrame(notification: NSNotification) {
+        
+        if let keyboardFrame = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+            let keyboardHeight = stackView.frame.size.height - keyboardFrame.origin.y + stackView.frame.origin.y
+            
+            bottomConstraint.constant += keyboardHeight
+            
+            UIView.animate(withDuration: 0.3) {
+                self.view.layoutIfNeeded()
+            }
+        }
     }
 }

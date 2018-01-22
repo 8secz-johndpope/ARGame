@@ -39,17 +39,12 @@ class Authorization {
     }
     
     /// Авторизация
-    func verification(_ verificationID: String, _ verificationCode: String) {
+    func signIn(_ verificationID: String, _ verificationCode: String, completion: ((_ user: AnyObject?, _ error: Error?) -> Void)?) {
         
         let credential = PhoneAuthProvider.provider().credential(withVerificationID: verificationID, verificationCode: verificationCode)
         
         Auth.auth().signIn(with: credential) { (user, error) in
-            if let error = error {
-                // ...
-                return
-            }
-            // User is signed in
-            // ...
+            completion?(user, error)
         }
     }
 }

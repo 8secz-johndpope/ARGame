@@ -118,7 +118,7 @@ extension AppCoordinator {
         let authCoordinator: AuthCoordinatorPresentation = AuthCoordinator.init(navigationController: navController)
         authCoordinator.start(animated: animated)
         
-        authCoordinator.completion = { [unowned self, unowned authCoordinator] (auththorized) -> Void in
+        authCoordinator.completion = { [unowned self, unowned authCoordinator] (user) -> Void in
             self.removeChildCoordinator(authCoordinator)
         }
         

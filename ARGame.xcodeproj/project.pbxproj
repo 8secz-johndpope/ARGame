@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1F2E265A1FEA86BA0025371D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1F2E26591FEA86B90025371D /* GoogleService-Info.plist */; };
+		1F7C83F920160C7C0034D585 /* AuthPinViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F7C83F820160C7C0034D585 /* AuthPinViewModel.swift */; };
 		1F81C8341FCD9BB000E12BC4 /* UIViewController-KeyboardObserverProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F81C8331FCD9BB000E12BC4 /* UIViewController-KeyboardObserverProtocol.swift */; };
 		1F937CF71FEBA809001AA923 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F937CF61FEBA809001AA923 /* LocationManager.swift */; };
 		1F937CF91FEBD3E3001AA923 /* DataPoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F937CF81FEBD3E3001AA923 /* DataPoints.swift */; };
@@ -24,9 +25,6 @@
 		1F99F09A1FEA5A0F0052E1F4 /* String-Localized.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F99F0991FEA5A0F0052E1F4 /* String-Localized.swift */; };
 		1F99F09D1FEA747F0052E1F4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1F99F09B1FEA747F0052E1F4 /* LaunchScreen.storyboard */; };
 		1FA086251FF13C7300719CD8 /* Atomic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FA086241FF13C7300719CD8 /* Atomic.swift */; };
-		1FA0862A1FF529CC00719CD8 /* AuthPinWireFrame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FA086291FF529CC00719CD8 /* AuthPinWireFrame.swift */; };
-		1FA0862C1FF529E500719CD8 /* AuthPinPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FA0862B1FF529E500719CD8 /* AuthPinPresenter.swift */; };
-		1FA0862E1FF529FE00719CD8 /* AuthPinIntercator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FA0862D1FF529FE00719CD8 /* AuthPinIntercator.swift */; };
 		1FA086311FF6224600719CD8 /* Authorization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FA086301FF6224600719CD8 /* Authorization.swift */; };
 		1FF0E8461FC436E3004620B7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FF0E8451FC436E3004620B7 /* AppDelegate.swift */; };
 		1FF0E84D1FC436E3004620B7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1FF0E84C1FC436E3004620B7 /* Assets.xcassets */; };
@@ -47,6 +45,7 @@
 
 /* Begin PBXFileReference section */
 		1F2E26591FEA86B90025371D /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		1F7C83F820160C7C0034D585 /* AuthPinViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthPinViewModel.swift; sourceTree = "<group>"; };
 		1F81C8331FCD9BB000E12BC4 /* UIViewController-KeyboardObserverProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController-KeyboardObserverProtocol.swift"; sourceTree = "<group>"; };
 		1F937CF61FEBA809001AA923 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		1F937CF81FEBD3E3001AA923 /* DataPoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataPoints.swift; sourceTree = "<group>"; };
@@ -63,9 +62,6 @@
 		1F99F0991FEA5A0F0052E1F4 /* String-Localized.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String-Localized.swift"; sourceTree = "<group>"; };
 		1F99F09C1FEA747F0052E1F4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		1FA086241FF13C7300719CD8 /* Atomic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Atomic.swift; sourceTree = "<group>"; };
-		1FA086291FF529CC00719CD8 /* AuthPinWireFrame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthPinWireFrame.swift; sourceTree = "<group>"; };
-		1FA0862B1FF529E500719CD8 /* AuthPinPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthPinPresenter.swift; sourceTree = "<group>"; };
-		1FA0862D1FF529FE00719CD8 /* AuthPinIntercator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthPinIntercator.swift; sourceTree = "<group>"; };
 		1FA086301FF6224600719CD8 /* Authorization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Authorization.swift; sourceTree = "<group>"; };
 		1FF0E8421FC436E3004620B7 /* ARGame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ARGame.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1FF0E8451FC436E3004620B7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -225,11 +221,9 @@
 		1FF0E8791FC589D2004620B7 /* AuthPin */ = {
 			isa = PBXGroup;
 			children = (
-				1FA086291FF529CC00719CD8 /* AuthPinWireFrame.swift */,
-				1FA0862B1FF529E500719CD8 /* AuthPinPresenter.swift */,
-				1FA0862D1FF529FE00719CD8 /* AuthPinIntercator.swift */,
 				1FF0E87A1FC589D2004620B7 /* AuthPinViewController.xib */,
 				1FF0E87B1FC589D2004620B7 /* AuthPinViewController.swift */,
+				1F7C83F820160C7C0034D585 /* AuthPinViewModel.swift */,
 			);
 			path = AuthPin;
 			sourceTree = "<group>";
@@ -404,12 +398,12 @@
 				1FF0E8581FC43EDC004620B7 /* AppCoordinator.swift in Sources */,
 				1F99F0791FE8EF430052E1F4 /* MapWireFrame.swift in Sources */,
 				1F99F09A1FEA5A0F0052E1F4 /* String-Localized.swift in Sources */,
+				1F7C83F920160C7C0034D585 /* AuthPinViewModel.swift in Sources */,
 				1F937CF91FEBD3E3001AA923 /* DataPoints.swift in Sources */,
 				1F81C8341FCD9BB000E12BC4 /* UIViewController-KeyboardObserverProtocol.swift in Sources */,
 				1FF0E8A41FC6AE29004620B7 /* AuthPhonePresenter.swift in Sources */,
 				1FF0E8A61FC6AE3F004620B7 /* AuthPhoneIntercator.swift in Sources */,
 				1FF0E8751FC58736004620B7 /* UIViewController-extension.swift in Sources */,
-				1FA0862E1FF529FE00719CD8 /* AuthPinIntercator.swift in Sources */,
 				1FA086251FF13C7300719CD8 /* Atomic.swift in Sources */,
 				1FA086311FF6224600719CD8 /* Authorization.swift in Sources */,
 				1FF0E87C1FC589D2004620B7 /* AuthPhoneViewController.swift in Sources */,
@@ -419,8 +413,6 @@
 				1FF0E8A21FC6AE0E004620B7 /* AuthPhoneWireFrame.swift in Sources */,
 				1FF0E85D1FC45357004620B7 /* Coordinator.swift in Sources */,
 				1FF0E87F1FC589D2004620B7 /* AuthPinViewController.swift in Sources */,
-				1FA0862A1FF529CC00719CD8 /* AuthPinWireFrame.swift in Sources */,
-				1FA0862C1FF529E500719CD8 /* AuthPinPresenter.swift in Sources */,
 				1FF0E8461FC436E3004620B7 /* AppDelegate.swift in Sources */,
 				1F99F0851FE8F3600052E1F4 /* MapViewController.swift in Sources */,
 				1F99F08B1FE91C900052E1F4 /* CameraViewController.swift in Sources */,

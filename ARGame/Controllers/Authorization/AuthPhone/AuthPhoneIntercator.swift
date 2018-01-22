@@ -24,7 +24,10 @@ class AuthPhoneInteractor: AuthPhoneInteractorUseCase {
     func verifyPhone(_ phoneNumber: String?) {
         
         guard var phoneNumber = phoneNumber
-            else { return }
+            else {
+                self.phoneVerifyError("alert_wrong".lcd)
+                return
+        }
         
         phoneNumber = "+" + phoneNumber
 

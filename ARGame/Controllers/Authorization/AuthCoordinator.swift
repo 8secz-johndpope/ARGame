@@ -12,12 +12,12 @@ protocol AuthCoordinatorPresentation: class {
     init(navigationController: UINavigationController)
     func start(animated: Bool)
     
-    var completion: ((_ authorized: Bool) -> Void)? { get set }
+    var completion: ((_ user: AnyObject) -> Void)? { get set }
 }
 
 class AuthCoordinator: AuthCoordinatorPresentation {
 
-    internal var completion: ((_ authorized: Bool) -> Void)?
+    internal var completion: ((_ user: AnyObject) -> Void)?
     
     fileprivate var appNavController: UINavigationController!
     fileprivate var authNavController: UINavigationController?
@@ -36,30 +36,26 @@ class AuthCoordinator: AuthCoordinatorPresentation {
     }
     
     fileprivate func openPhoneViewController(animated: Bool) {
-        
+
         let authPhone = AuthPhoneWireFrame() as AuthPhoneWireFramePresentation
         let vc = authPhone.createModule()
         authNavController = UINavigationController.init(rootViewController: vc)
         appNavController.present(authNavController!, animated: animated, completion: nil)
 
-        authPhone.moduleCompletion = { [unowned self] (verificationID) -> Void in
+        authPhone.completion = { [unowned self] (verificationID) -> Void in
             self.openPinViewController(verificationID)
         }
     }
     
     fileprivate func openPinViewController(_ verificationID: String) {
-        
-        /*  TODO i:
-         *  Когда будет макет сделать по аналогии с AuthPhoneWireFramePresentation
-         */
-        
+
         let vc: AuthPinViewController = AuthPinViewController.loadFromNib()
         vc.verificationID = verificationID
         authNavController?.pushViewController(vc, animated: true)
         
-        vc.completion = { [unowned self] (success) -> Void in
+        vc.completion = { [unowned self] (user) -> Void in
             self.appNavController.dismiss(animated: true, completion: {
-                self.completion?(success)
+                self.completion?(user)
             })
         }
     }
