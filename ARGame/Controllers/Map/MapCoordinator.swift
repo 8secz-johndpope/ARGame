@@ -11,11 +11,9 @@ import UIKit
 class MapCoordinator {
 
     lazy var navController: UIViewController = {
-        
         let map = MapWireFrame() as MapWireFramePresentation
         let mapVC = map.createModule()
         let navController = UINavigationController.init(rootViewController: mapVC)
-
         return navController
     }()
 }

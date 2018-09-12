@@ -20,7 +20,7 @@ class TabBarController: UITabBarController {
     }
     
     func configureControllers () {
-        
+
         let mapVC = MapCoordinator().navController
         mapVC.tabBarItem.title = "tab_item_map".lcd
         mapVC.tabBarItem.image = UIImage(named: "tab_bar_locate")

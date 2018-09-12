@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import GoogleMaps
+import CoreLocation
 
 class LocationManager: NSObject {
 
@@ -16,8 +16,13 @@ class LocationManager: NSObject {
     
     override init() {
         super.init()
-        
+        configure()
+    }
+
+    func configure() {
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        //  locationManager.activityType = .automotiveNavigation
+        locationManager.pausesLocationUpdatesAutomatically = false
         locationManager.delegate = self
         locationManager.startUpdatingLocation()
     }
@@ -26,7 +31,6 @@ class LocationManager: NSObject {
 extension LocationManager: CLLocationManagerDelegate {
 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        
         if let location = locations.last {
             updateLocation?(location)
         }

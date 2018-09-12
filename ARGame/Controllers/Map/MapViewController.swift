@@ -36,7 +36,6 @@ class MapViewController: UIViewController, MapViewPresentation {
     
     // MARK: - Map
     func configureMap() {
-        
         mapView.isMyLocationEnabled = true
         mapView.settings.myLocationButton = true
         view = mapView
@@ -52,7 +51,6 @@ class MapViewController: UIViewController, MapViewPresentation {
     }
   
     func updateMapMarkers(_ data: Array<AnyObject>) {
-        
         mapView.clear()
         
         for obj in data {
@@ -66,7 +64,6 @@ class MapViewController: UIViewController, MapViewPresentation {
 extension MapViewController: CLLocationManagerDelegate {
 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        
         guard let location = locations.last
             else { return }
         

@@ -11,7 +11,7 @@ import Foundation
 protocol AuthPinViewModelPresentation: class {
     var refreshing: ((_ value: Bool) -> Void)? { get set }
     var completion: ((_ user: AnyObject) -> Void)? { get set }
-    var showAlert: ((_ message: String?) -> Void)? { get set }
+    var signInError: ((_ message: String?) -> Void)? { get set }
     
     func signIn(_ verificationID: String?, _ verificationCode: String?)
 }
@@ -20,7 +20,7 @@ class AuthPinViewModel: AuthPinViewModelPresentation {
 
     var refreshing: ((Bool) -> Void)?
     var completion: ((AnyObject) -> Void)?
-    var showAlert: ((String?) -> Void)?
+    var signInError: ((String?) -> Void)?
     
     func signIn(_ verificationID: String?, _ verificationCode: String?) {
         
@@ -47,16 +47,12 @@ class AuthPinViewModel: AuthPinViewModelPresentation {
     }
     
     func checkCorrectData(_ verificationID: String?, _ verificationCode: String?) -> Bool {
-
         if let v = verificationID, let c = verificationCode {
-            
             if v.isEmpty || c.isEmpty {
                 self.signError("alert_wrong".lcd)
                 return false
             }
-            
             return true
-            
         } else {
             return false
         }
@@ -76,7 +72,7 @@ class AuthPinViewModel: AuthPinViewModelPresentation {
     
     func signError(_ message: String) {
         DispatchQueue.main.async {
-            self.showAlert?(message)
+            self.signInError?(message)
         }
     }
 }

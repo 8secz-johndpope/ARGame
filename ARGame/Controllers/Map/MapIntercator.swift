@@ -24,9 +24,7 @@ class MapIntercator: MapInteractorUseCase {
     }
     
     func createData() {
-        
         DataPoints.shared.download { [weak self] (points) in
-            
             guard let strongSelf = self
                 else { return }
             
@@ -39,9 +37,8 @@ class MapIntercator: MapInteractorUseCase {
     }
     
     func createMarkers(_ points: Array<ARPoint>) {
-        
         markers.removeAll()
-        
+
         for point in points {
             markers.append(point.marker)
         }

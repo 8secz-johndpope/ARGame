@@ -41,7 +41,7 @@ class AuthPinViewController: UIViewController {
             self.completion?(user)
         }
         
-        pinViewModel.showAlert = { [unowned self] (message) -> Void in
+        pinViewModel.signInError = { [unowned self] (message) -> Void in
             self.showAlertController(message)
         }
         

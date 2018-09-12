@@ -9,15 +9,14 @@
 import UIKit
 import AVFoundation
 
-protocol CameraViewControllerPresentation: class {
-    func open()
-    func close()
-    
+protocol CameraViewControllerPresentable: class {
+    func on()
+    func off()
     /// Управление фильтрами камеры
     func setFire(_ value: Bool)
 }
 
-class CameraViewController: UIViewController, CameraViewControllerPresentation {
+class CameraViewController: UIViewController, CameraViewControllerPresentable {
     
     /* imageView под imageView_2
      * imageView без фильтра
@@ -30,30 +29,35 @@ class CameraViewController: UIViewController, CameraViewControllerPresentation {
         }
     }
     
-    var captureSession: AVCaptureSession?
-    var fire: Atomic = Atomic(value: false)
+    fileprivate var captureSession: AVCaptureSession?
+    fileprivate var fire: Atomic = Atomic(value: false)
+    fileprivate lazy var fireFilter: CIFilter? = {
+        return CIFilter(name: "CISpotColor")
+    }()
+    fileprivate lazy var noFireFilter: CIFilter? = {
+        return CIFilter(name: "CIEdges")
+    }()
 
     // MARK: - CameraViewControllerPresentation
-    func open() {
+    public func on() {
         DispatchQueue.main.async {
             self.startCamera()
             self.checkCaptureSessionRequestAccess()
         }
     }
     
-    func close() {
+    public func off() {
         DispatchQueue.main.async {
             self.stopCamera()
         }
     }
     
-    func setFire(_ value: Bool) {
+    public func setFire(_ value: Bool) {
         fire.value = value
     }
 
     // MARK: - Camera methods
-    func startCamera() {
-        
+    fileprivate func startCamera() {
         if captureSession == nil {
             configureCaptureSession()
         }
@@ -61,29 +65,18 @@ class CameraViewController: UIViewController, CameraViewControllerPresentation {
         captureSession?.startRunning()
     }
     
-    func stopCamera() {
+    fileprivate func stopCamera() {
         captureSession?.stopRunning()
     }
 
-    func configureCaptureSession() {
-
+    fileprivate func configureCaptureSession() {
         let session = AVCaptureSession()
         session.sessionPreset = AVCaptureSession.Preset.photo
 
-        if let backCamera = AVCaptureDevice.default(for: AVMediaType.video) {
-
-            if let input = try? AVCaptureDeviceInput(device: backCamera) {
-                
-                if session.canAddInput(input) {
-                    session.addInput(input)
-                } else {
-                    return
-                }
-                
-            } else {
-                return
-            }
-            
+        if let backCamera = AVCaptureDevice.default(for: AVMediaType.video),
+            let input = try? AVCaptureDeviceInput(device: backCamera),
+            session.canAddInput(input) {
+            session.addInput(input)
         } else {
             return
         }
@@ -104,8 +97,7 @@ class CameraViewController: UIViewController, CameraViewControllerPresentation {
     }
 
     /// Если нет доступа к камере покажем алерт, напомним пользователю
-    func checkCaptureSessionRequestAccess() {
-        
+    fileprivate func checkCaptureSessionRequestAccess() {
         AVCaptureDevice.requestAccess(for: AVMediaType.video, completionHandler: { granted  in
             if !granted {
                 DispatchQueue.main.async {
@@ -115,22 +107,10 @@ class CameraViewController: UIViewController, CameraViewControllerPresentation {
         })
     }
     
-    func showCameraPermissionAlert() {
+    fileprivate func showCameraPermissionAlert() {
         let alertController = UIAlertController(title: "Alert", message: "alert_camera".lcd, preferredStyle: .alert)
         alertController.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
-        self.present(alertController, animated: true, completion: nil)
-    }
-    
-    func filter() -> CIFilter? {
-        var filter: CIFilter?
-        
-        if fire.value == true {
-            filter = CIFilter(name: "CISpotColor")
-        } else {
-            filter = CIFilter(name: "CIEdges")
-        }
-        
-        return filter
+        present(alertController, animated: true, completion: nil)
     }
 }
 
@@ -140,17 +120,14 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
         
         connection.videoOrientation = AVCaptureVideoOrientation.portrait;
         
-        guard let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
+        guard let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer),
+            let filter = (fire.value ? fireFilter : noFireFilter)
             else { return }
 
-        guard let filter = filter()
-            else { return }
-        
         let cameraImage = CIImage(cvPixelBuffer: pixelBuffer)
         filter.setValue(cameraImage, forKey: kCIInputImageKey)
         
         DispatchQueue.main.async {
-            
             self.imageView.image = UIImage(ciImage: cameraImage)
             
             if let outputValue = filter.value(forKey: kCIOutputImageKey) as? CIImage {

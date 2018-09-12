@@ -37,6 +37,8 @@ class AuthCoordinator: AuthCoordinatorPresentation {
     
     fileprivate func openPhoneViewController(animated: Bool) {
 
+        /// сделать как в openPinViewController
+ 
         let authPhone = AuthPhoneWireFrame() as AuthPhoneWireFramePresentation
         let vc = authPhone.createModule()
         authNavController = UINavigationController.init(rootViewController: vc)
